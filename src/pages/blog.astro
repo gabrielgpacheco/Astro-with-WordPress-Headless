@@ -1,0 +1,398 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { wpquery } from '../graphql/wordPressQuery';
+
+// Fetch blog posts from WordPress
+const wpData = await wpquery({
+	query: `
+		{
+			posts {
+				nodes {
+					slug
+					excerpt
+					title
+					dateGmt
+					author {
+						node {
+							name
+						}
+					}
+					categories {
+						nodes {
+							name
+						}
+					}
+					featuredImage {
+						node {
+							sourceUrl
+						}
+					}
+				}
+			}
+		}
+	`,
+});
+
+// Sample fallback blog posts with freely available content if WordPress is not available
+interface BlogPost {
+	id: string;
+	title: string;
+	excerpt: string;
+	date: string;
+	author: string;
+	category: string;
+	image: string;
+	slug: string;
+}
+
+const samplePosts: BlogPost[] = [
+	{
+		id: "1",
+		slug: "employment-rights",
+		title: "Understanding Employment Rights: What Every Employee Should Know",
+		excerpt: "Learn about your fundamental employment rights, including fair wages, safe working conditions, and protection from discrimination. Understanding these rights is crucial for every worker.",
+		date: "April 15, 2026",
+		author: "James Mitchell",
+		category: "Employment Law",
+		image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop"
+	},
+	{
+		id: "2",
+		slug: "mergers-acquisitions",
+		title: "Guide to Corporate Mergers and Acquisitions",
+		excerpt: "A comprehensive overview of the M&A process, including due diligence, valuation, and integration strategies. This guide helps business owners understand what to expect during a merger or acquisition.",
+		date: "April 10, 2026",
+		author: "Margaret Sterling",
+		category: "Corporate Law",
+		image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
+	},
+	{
+		id: "3",
+		slug: "real-estate-checklist",
+		title: "Real Estate Transactions: Step-by-Step Checklist for Buyers",
+		excerpt: "Buying a property is a significant investment. This checklist guides you through essential steps, from inspections to closing, ensuring a smooth transaction process.",
+		date: "April 5, 2026",
+		author: "Victoria Chen",
+		category: "Real Estate",
+		image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop"
+	},
+	{
+		id: "4",
+		slug: "intellectual-property",
+		title: "Protecting Your Intellectual Property: Patents, Trademarks, and Copyrights",
+		excerpt: "Your intellectual property is valuable. Discover how patents, trademarks, and copyrights protect your creations and business assets in an increasingly digital world.",
+		date: "March 28, 2026",
+		author: "David Rodriguez",
+		category: "Intellectual Property",
+		image: "https://images.unsplash.com/photo-1516534775068-bb6a0db3ab50?w=600&h=400&fit=crop"
+	},
+	{
+		id: "5",
+		slug: "family-law-essentials",
+		title: "Family Law Essentials: Navigating Divorce and Custody",
+		excerpt: "Divorce is challenging both emotionally and legally. This guide explains custody arrangements, property division, and support obligations to help you navigate family law matters.",
+		date: "March 20, 2026",
+		author: "Margaret Sterling",
+		category: "Family Law",
+		image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
+	},
+	{
+		id: "6",
+		slug: "litigation-strategy",
+		title: "Litigation Strategy: How to Prepare for Court",
+		excerpt: "Facing litigation? Learn essential strategies for preparing your case, gathering evidence, and presenting arguments effectively in court proceedings.",
+		date: "March 15, 2026",
+		author: "James Mitchell",
+		category: "Litigation",
+		image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=400&fit=crop"
+	}
+];
+
+// Use WordPress data if available, otherwise use sample posts
+const blogPosts = (wpData?.posts?.nodes && wpData.posts.nodes.length > 0) 
+	? wpData.posts.nodes.map((post: any) => ({
+		title: post.title,
+		excerpt: post.excerpt?.replace(/<[^>]*>/g, ''),
+		date: new Date(post.dateGmt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+		author: post.author?.node?.name || 'Sterling Law Firm',
+		category: post.categories?.nodes?.[0]?.name || 'Legal Insights',
+		image: post.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=400&fit=crop',
+		slug: post.slug
+	}))
+	: samplePosts;
+---
+
+<Layout title="Blog - Sterling Law Firm">
+	<section class="hero-simple">
+		<div class="container">
+			<h1>Legal Insights & News</h1>
+			<p>Stay informed with articles on various legal topics</p>
+		</div>
+	</section>
+
+	<section class="blog-section">
+		<div class="container">
+			<div class="blog-grid">
+				{blogPosts.map((post: any) => (
+					<article class="blog-card">
+						<a href={`/blog/${post.slug}`} class="blog-card-link">
+							<img src={post.image} alt={post.title} class="blog-image" />
+							<div class="blog-content">
+								<div class="blog-meta">
+									<span class="category">{post.category}</span>
+									<span class="date">{post.date}</span>
+								</div>
+								<h2 class="card-title">{post.title}</h2>
+								<p class="excerpt">{post.excerpt}</p>
+								<div class="blog-footer">
+									<span class="author">By {post.author}</span>
+									<span class="read-more">Read More →</span>
+								</div>
+							</div>
+						</a>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="blog-subscribe">
+		<div class="container">
+			<div class="subscribe-content">
+				<h2>Subscribe to Our Newsletter</h2>
+				<p>Get the latest legal updates and insights delivered to your inbox</p>
+				<form class="subscribe-form" onsubmit="event.preventDefault();">
+					<input 
+						type="email" 
+						placeholder="Enter your email address" 
+						required 
+					/>
+					<button type="submit">Subscribe</button>
+				</form>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero-simple {
+		background: linear-gradient(135deg, #1a3a52, #2d5f7f);
+		color: white;
+		padding: 60px 20px;
+		text-align: center;
+	}
+
+	.hero-simple h1 {
+		font-family: "Playfair Display", serif;
+		font-size: 42px;
+		margin: 0 0 15px 0;
+	}
+
+	.hero-simple p {
+		font-size: 18px;
+		margin: 0;
+		opacity: 0.95;
+	}
+
+	.blog-section {
+		padding: 80px 20px;
+		background-color: #f8f9fa;
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+		gap: 30px;
+	}
+
+	.blog-card {
+		background: white;
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+		transition: all 0.3s ease;
+		height: 100%;
+	}
+
+	.blog-card-link {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.blog-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+	}
+
+	.blog-image {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		display: block;
+		cursor: pointer;
+		transition: transform 0.3s ease;
+	}
+
+	.blog-card:hover .blog-image {
+		transform: scale(1.05);
+	}
+
+	.blog-content {
+		padding: 25px;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.blog-meta {
+		display: flex;
+		gap: 15px;
+		margin-bottom: 15px;
+		font-size: 13px;
+	}
+
+	.category {
+		background-color: #d4af37;
+		color: #1a3a52;
+		padding: 4px 10px;
+		border-radius: 4px;
+		font-weight: 600;
+	}
+
+	.date {
+		color: #999;
+	}
+
+	.blog-card h2 {
+		font-family: "Playfair Display", serif;
+		font-size: 22px;
+		color: #1a3a52;
+		margin: 0 0 15px 0;
+		line-height: 1.4;
+	}
+
+	.card-title {
+		cursor: pointer;
+		transition: color 0.3s ease;
+	}
+
+	.blog-card:hover .card-title {
+		color: #d4af37;
+	}
+
+	.excerpt {
+		color: #666;
+		line-height: 1.8;
+		flex: 1;
+		margin-bottom: 20px;
+	}
+
+	.blog-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 15px;
+		border-top: 1px solid #eee;
+	}
+
+	.author {
+		font-size: 13px;
+		color: #999;
+	}
+
+	.read-more {
+		color: #d4af37;
+		text-decoration: none;
+		font-weight: 600;
+		transition: color 0.3s ease;
+		cursor: pointer;
+		display: inline-block;
+	}
+
+	.blog-card:hover .read-more {
+		color: #f5c947;
+	}
+
+	.blog-subscribe {
+		background: linear-gradient(135deg, #1a3a52, #2d5f7f);
+		color: white;
+		padding: 60px 20px;
+	}
+
+	.subscribe-content {
+		max-width: 600px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.subscribe-content h2 {
+		font-family: "Playfair Display", serif;
+		font-size: 32px;
+		margin-bottom: 15px;
+	}
+
+	.subscribe-content p {
+		font-size: 16px;
+		margin-bottom: 30px;
+		opacity: 0.95;
+	}
+
+	.subscribe-form {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.subscribe-form input {
+		flex: 1;
+		min-width: 250px;
+		padding: 12px 15px;
+		border: none;
+		border-radius: 4px;
+		font-family: "Open Sans", sans-serif;
+		font-size: 14px;
+	}
+
+	.subscribe-form button {
+		padding: 12px 30px;
+		background-color: #d4af37;
+		color: #1a3a52;
+		border: none;
+		border-radius: 4px;
+		font-weight: 700;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		font-family: "Open Sans", sans-serif;
+	}
+
+	.subscribe-form button:hover {
+		background-color: #f5c947;
+	}
+
+	@media (max-width: 768px) {
+		.hero-simple h1 {
+			font-size: 32px;
+		}
+
+		.blog-section {
+			padding: 50px 20px;
+		}
+
+		.blog-grid {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+
+		.subscribe-form {
+			flex-direction: column;
+		}
+
+		.subscribe-form input {
+			min-width: auto;
+		}
+	}
+</style>

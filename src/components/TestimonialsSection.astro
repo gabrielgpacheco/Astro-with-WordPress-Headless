@@ -1,0 +1,148 @@
+---
+interface Testimonial {
+	text: string;
+	author: string;
+	company: string;
+	image: string;
+}
+
+const testimonials: Testimonial[] = [
+	{
+		text: "Sterling Law Firm provided exceptional representation in our complex corporate acquisition. Their attention to detail and strategic thinking were invaluable.",
+		author: "Robert Johnson",
+		company: "TechVentures Inc.",
+		image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+	},
+	{
+		text: "The team at Sterling went above and beyond to secure a favorable settlement in our litigation case. Highly recommended!",
+		author: "Sarah Williams",
+		company: "Williams Manufacturing",
+		image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
+	},
+	{
+		text: "Professional, knowledgeable, and compassionate. They handled our family matter with the utmost care and expertise.",
+		author: "Michael Chen",
+		company: "Private Client",
+		image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
+	}
+];
+---
+
+<section class="testimonials">
+	<div class="container">
+		<div class="section-header">
+			<h2>Client Testimonials</h2>
+			<p>What our clients say about working with us</p>
+		</div>
+		<div class="testimonials-grid">
+			{testimonials.map((testimonial) => (
+				<div class="testimonial-card">
+					<div class="stars">⭐⭐⭐⭐⭐</div>
+					<p class="testimonial-text">"{testimonial.text}"</p>
+					<div class="testimonial-author">
+						<img src={testimonial.image} alt={testimonial.author} class="author-image" />
+						<div>
+							<p class="author-name">{testimonial.author}</p>
+							<p class="author-company">{testimonial.company}</p>
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.testimonials {
+		padding: 80px 0;
+		background: linear-gradient(135deg, #1a3a52, #2d5f7f);
+		color: white;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 60px;
+	}
+
+	.section-header h2 {
+		font-family: "Playfair Display", serif;
+		font-size: 42px;
+		color: white;
+		margin-bottom: 15px;
+	}
+
+	.section-header p {
+		font-size: 18px;
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.testimonials-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 30px;
+	}
+
+	.testimonial-card {
+		background: rgba(255, 255, 255, 0.1);
+		padding: 30px;
+		border-radius: 8px;
+		border-left: 4px solid #d4af37;
+		transition: all 0.3s ease;
+		backdrop-filter: blur(10px);
+	}
+
+	.testimonial-card:hover {
+		transform: translateY(-5px);
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	.stars {
+		font-size: 18px;
+		margin-bottom: 15px;
+	}
+
+	.testimonial-text {
+		font-size: 16px;
+		line-height: 1.8;
+		margin-bottom: 20px;
+		font-style: italic;
+	}
+
+	.testimonial-author {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+	}
+
+	.author-image {
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.author-name {
+		font-weight: 600;
+		margin: 0;
+	}
+
+	.author-company {
+		font-size: 14px;
+		opacity: 0.8;
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		.testimonials {
+			padding: 50px 0;
+		}
+
+		.section-header h2 {
+			font-size: 32px;
+		}
+
+		.testimonials-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

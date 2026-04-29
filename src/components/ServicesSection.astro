@@ -1,0 +1,136 @@
+---
+interface Service {
+	icon: string;
+	title: string;
+	description: string;
+}
+
+const services: Service[] = [
+	{
+		icon: "⚖️",
+		title: "Corporate Law",
+		description: "Expert guidance on corporate governance, mergers, acquisitions, and business transactions."
+	},
+	{
+		icon: "👨‍⚖️",
+		title: "Litigation",
+		description: "Aggressive representation in civil and commercial disputes at all court levels."
+	},
+	{
+		icon: "🏠",
+		title: "Real Estate",
+		description: "Comprehensive services for residential and commercial property transactions."
+	},
+	{
+		icon: "❤️",
+		title: "Family Law",
+		description: "Compassionate guidance through divorce, custody, and estate planning matters."
+	},
+	{
+		icon: "💼",
+		title: "Employment Law",
+		description: "Protection of employee and employer rights in workplace matters."
+	},
+	{
+		icon: "🛡️",
+		title: "Intellectual Property",
+		description: "Protection of patents, trademarks, copyrights, and trade secrets."
+	}
+];
+---
+
+<section class="services">
+	<div class="container">
+		<div class="section-header">
+			<h2>Our Practice Areas</h2>
+			<p>We offer comprehensive legal services across multiple practice areas</p>
+		</div>
+		<div class="services-grid">
+			{services.map((service) => (
+				<div class="service-card">
+					<div class="service-icon">{service.icon}</div>
+					<h3>{service.title}</h3>
+					<p>{service.description}</p>
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.services {
+		padding: 80px 0;
+		background-color: #f8f9fa;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 60px;
+	}
+
+	.section-header h2 {
+		font-family: "Playfair Display", serif;
+		font-size: 42px;
+		color: #1a3a52;
+		margin-bottom: 15px;
+	}
+
+	.section-header p {
+		font-size: 18px;
+		color: #666;
+	}
+
+	.services-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 30px;
+	}
+
+	.service-card {
+		background: white;
+		padding: 40px;
+		border-radius: 8px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+		transition: all 0.3s ease;
+		text-align: center;
+	}
+
+	.service-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+	}
+
+	.service-icon {
+		font-size: 48px;
+		margin-bottom: 20px;
+		display: block;
+	}
+
+	.service-card h3 {
+		font-family: "Playfair Display", serif;
+		font-size: 22px;
+		color: #1a3a52;
+		margin-bottom: 15px;
+	}
+
+	.service-card p {
+		color: #666;
+		line-height: 1.8;
+		font-size: 16px;
+	}
+
+	@media (max-width: 768px) {
+		.services {
+			padding: 50px 0;
+		}
+
+		.section-header h2 {
+			font-size: 32px;
+		}
+
+		.services-grid {
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+	}
+</style>
