@@ -1,6 +1,6 @@
 # Sterling Law Firm Website
 
-A modern, professionally-designed law firm website built with **Astro** and integrated with WordPress backend via GraphQL. This project showcases a complete web presence for a law firm with responsive design, dynamic content integration, and SEO optimization.
+A modern, professionally-designed law firm website built with **Astro** and integrated with WordPress backend via GraphQL. This project showcases a complete web presence for a law firm with responsive design, dynamic content integration, and SEO optimization. Live preview on https://law.gabrielpacheco.com.br/
 
 [![Astro](https://img.shields.io/badge/Astro-6.1.10-purple?logo=astro)](https://astro.build)
 [![Node.js](https://img.shields.io/badge/Node.js-22.12.0+-green?logo=nodedotjs)](https://nodejs.org/)
